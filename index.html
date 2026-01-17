@@ -238,6 +238,46 @@ body {
 /* ===== QUIZ ===== */
 .quiz-card {
     animation: slideInRight 0.5s ease;
+    position: relative;
+}
+
+/* Stickers de feedback géants */
+.feedback-sticker {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.feedback-sticker.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.feedback-sticker img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 8px solid white;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: stickerPop 0.6s ease;
+}
+
+@keyframes stickerPop {
+    0% {
+        transform: scale(0) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+    }
 }
 
 @keyframes slideInRight {
@@ -671,6 +711,16 @@ body {
         padding: 14px 30px;
         font-size: 1rem;
     }
+    
+    .feedback-sticker img {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .sticker {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -726,6 +776,11 @@ body {
             <h2 id="question-text" class="question-text"></h2>
             <div id="answers-container" class="answers-container"></div>
         </div>
+        
+        <!-- Stickers de feedback -->
+        <div id="feedback-sticker" class="feedback-sticker">
+            <img id="feedback-image" src="" alt="Feedback">
+        </div>
     </div>
 
     <!-- Écran intermédiaire (calcul) -->
@@ -770,7 +825,7 @@ body {
 // ===== DONNÉES DU QUIZ =====
 const quizData = [
     {
-        question: "Combien de sommets Brice a-t-il réussi à faire dans son projet 30 x 3000 ?",
+        question: "Combien de sommets Brice a-t-il déjà réussi à faire dans son projet 30 x 3000 ?",
         image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/WhatsApp%20Image%202026-01-17%20at%2010.36.52.jpeg?raw=true",
         answers: [
             { text: "8 sommets", points: 0, correct: false },
@@ -935,6 +990,9 @@ const scoreValue = document.getElementById('score-value');
 const verdictTitle = document.getElementById('verdict-title');
 const verdictText = document.getElementById('verdict-text');
 
+const feedbackSticker = document.getElementById('feedback-sticker');
+const feedbackImage = document.getElementById('feedback-image');
+
 // ===== INITIALISATION =====
 totalQuestionsSpan.textContent = quizData.length;
 
@@ -1031,6 +1089,23 @@ function playHappySound() {
     });
 }
 
+function showFeedbackSticker(isCorrect) {
+    // Définir l'image selon la réponse
+    if (isCorrect) {
+        feedbackImage.src = "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/yes.jpeg?raw=true";
+    } else {
+        feedbackImage.src = "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/no.jpg?raw=true";
+    }
+    
+    // Afficher le sticker avec animation
+    feedbackSticker.classList.add('show');
+    
+    // Cacher après 1.2 secondes
+    setTimeout(() => {
+        feedbackSticker.classList.remove('show');
+    }, 1200);
+}
+
 function startQuiz() {
     // Réinitialiser
     currentQuestionIndex = 0;
@@ -1092,6 +1167,9 @@ function showQuestion() {
 function selectAnswer(answerIndex, points) {
     const answerButtons = document.querySelectorAll('.answer-btn');
     const selectedAnswer = quizData[currentQuestionIndex].answers[answerIndex];
+    
+    // Afficher le sticker de feedback géant
+    showFeedbackSticker(selectedAnswer.correct);
     
     // Jouer le son approprié
     if (selectedAnswer.correct) {

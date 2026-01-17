@@ -241,6 +241,28 @@ body {
     color: var(--text-dark);
 }
 
+.question-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 12px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: imageZoomIn 0.5s ease;
+}
+
+@keyframes imageZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .answers-container {
     display: flex;
     flex-direction: column;
@@ -558,12 +580,12 @@ body {
             <h1 class="title-main">🎂 BRICE-O-METER 3000™</h1>
             <p class="subtitle">Évaluation Scientifique Officielle des 30 Ans</p>
             <div class="warning-box">
-                <p>⚠️ Attention : Cet outil d'analyse comportementale de haute précision a été calibré spécifiquement pour mesurer le niveau de maturité atteint après 30 années d'existence.</p>
+                <p>⚠️ Attention : Ce quiz ultra-précis va tester vos connaissances sur Brice, sa vie, ses aventures et ses exploits ! Es-tu prêt à relever le défi ?</p>
             </div>
             <button id="start-btn" class="btn btn-primary">
                 Commencer l'Analyse
             </button>
-            <p class="disclaimer">Certifié conforme par l'Institut International des Anniversaires Marquants</p>
+            <p class="disclaimer">Certifié conforme par Margot, Claudia et tous les amis de Brice</p>
         </div>
     </div>
 
@@ -573,7 +595,7 @@ body {
             <div class="progress-bar">
                 <div id="progress-fill" class="progress-fill"></div>
             </div>
-            <p class="progress-text"><span id="current-question">1</span> / <span id="total-questions">8</span></p>
+            <p class="progress-text"><span id="current-question">1</span> / <span id="total-questions">11</span></p>
         </div>
         
         <div class="card quiz-card">
@@ -601,17 +623,17 @@ body {
             <div class="score-display">
                 <div class="score-circle">
                     <span id="score-value" class="score-value">0</span>
-                    <span class="score-label">/ 100</span>
+                    <span class="score-label">/ 11</span>
                 </div>
             </div>
             <h2 id="verdict-title" class="verdict-title"></h2>
             <p id="verdict-text" class="verdict-text"></p>
             <div class="birthday-message">
                 <h3>🎂 Joyeux 30e Anniversaire Brice ! 🎂</h3>
-                <p>Que cette nouvelle décennie soit remplie d'aventures, de moments inoubliables et surtout... de maturité (ou pas) ! 🎈</p>
+                <p>Que cette nouvelle décennie soit remplie d'aventures épiques, de sommets conquis et de moments inoubliables avec Margot et tous tes proches ! 🎈</p>
             </div>
             <button id="restart-btn" class="btn btn-secondary">
-                Refaire l'Analyse
+                Refaire le Quiz
             </button>
         </div>
     </div>
@@ -620,96 +642,127 @@ body {
 // ===== DONNÉES DU QUIZ =====
 const quizData = [
     {
-        question: "Un dimanche matin typique pour Brice, c'est plutôt :",
+        question: "Combien de sommets Brice a-t-il réussi à faire dans son projet 30 x 3000 ?",
         answers: [
-            { text: "🏃‍♂️ Jogging à 7h suivi d'un smoothie aux graines de chia", points: 10 },
-            { text: "☕ Se réveiller à midi avec les cheveux en bataille", points: 40 },
-            { text: "🎮 Déjà 3h de gaming en pyjama", points: 70 },
-            { text: "🛏️ Attendre que quelqu'un apporte le petit-déj au lit", points: 100 }
+            { text: "8 sommets", points: 0, correct: false },
+            { text: "9 sommets", points: 10, correct: true },
+            { text: "10 sommets", points: 0, correct: false },
+            { text: "12 sommets", points: 0, correct: false }
         ]
     },
     {
-        question: "Face à un meuble IKEA à monter, Brice :",
+        question: "Lors de ces cinq dernières années, pour quelle blessure absurde Brice s'est-il lourdement plaint à sa maman Claudia après une après-midi à la Gouille ?",
         answers: [
-            { text: "📋 Lit la notice étape par étape comme un adulte responsable", points: 5 },
-            { text: "🔨 Commence direct, la notice c'est pour les faibles", points: 60 },
-            { text: "📱 Appelle quelqu'un \"qui s'y connaît mieux\"", points: 85 },
-            { text: "🚚 Paie quelqu'un pour le faire à sa place", points: 95 }
+            { text: "Une piqûre d'insecte sur un orteil", points: 10, correct: true },
+            { text: "Une morsure de cigue", points: 0, correct: false },
+            { text: "Un gros coup de soleil", points: 0, correct: false },
+            { text: "Une morsure de poule", points: 0, correct: false }
         ]
     },
     {
-        question: "Quand Brice reçoit un message vocal de 5 minutes :",
+        question: "Dans laquelle de ses lubies Brice n'a-t-il toujours pas réussi à convertir Margot ?",
         answers: [
-            { text: "🎧 L'écoute attentivement et répond point par point", points: 15 },
-            { text: "⏩ Accélère à x2 et capte l'essentiel", points: 45 },
-            { text: "👀 Regarde juste la durée et répond \"ok 👍\"", points: 75 },
-            { text: "❌ Le laisse en \"non lu\" indéfiniment", points: 90 }
+            { text: "VTT", points: 10, correct: true },
+            { text: "Vélo", points: 0, correct: false },
+            { text: "Peaux de phoques", points: 0, correct: false },
+            { text: "Course", points: 0, correct: false }
         ]
     },
     {
-        question: "Pour ses 30 ans, le cadeau idéal pour Brice serait :",
+        question: "Quelle est la marque préférée de Brice ?",
         answers: [
-            { text: "📚 Un livre de développement personnel", points: 20 },
-            { text: "🎮 La dernière console ou gadget tech", points: 55 },
-            { text: "🍕 Un abonnement illimité pizza", points: 80 },
-            { text: "🛌 Une journée complète sans responsabilités", points: 100 }
+            { text: "Dynafit", points: 0, correct: false },
+            { text: "Ortovox", points: 0, correct: false },
+            { text: "Mammut", points: 10, correct: true },
+            { text: "Atomic", points: 0, correct: false }
         ]
     },
     {
-        question: "La définition de \"faire le ménage\" selon Brice :",
+        question: "Qui Brice a-t-il réussi à ragoter dans un projet bancal de VTT à Tenerife sous la pluie ?",
         answers: [
-            { text: "🧹 Aspirer, laver, ranger, désinfecter - le grand jeu", points: 10 },
-            { text: "📦 Ranger ce qui traîne dans des tiroirs", points: 50 },
-            { text: "👀 Pousser tout sous le lit avant que quelqu'un arrive", points: 80 },
-            { text: "🚪 Fermer la porte de la pièce en désordre", points: 100 }
+            { text: "Le voisin de l'avion", points: 10, correct: true },
+            { text: "Un ami surfeur au camp", points: 0, correct: false },
+            { text: "Le professeur de surf", points: 0, correct: false },
+            { text: "Le vendeur de la supérette", points: 0, correct: false }
         ]
     },
     {
-        question: "Gérer son budget mensuel pour Brice, c'est :",
+        question: "Pour quelle raison Brice a-t-il été aperçu un soir de la foire du Valais avec cet énorme cadre ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/cadre2.jpg?raw=true",
         answers: [
-            { text: "💼 Excel avec catégories et prévisions sur 6 mois", points: 5 },
-            { text: "📱 Une app qui fait des graphiques sympas", points: 35 },
-            { text: "🏧 Vérifier le solde au distributeur de temps en temps", points: 70 },
-            { text: "🤷 \"Y'a encore de l'argent dans le compte ? Cool.\"", points: 95 }
+            { text: "Rempli d'ivresse, il a craqué pour ce beau paysage valaisan", points: 0, correct: false },
+            { text: "Quelqu'un a tiré le frein d'urgence et il s'est retrouvé par hasard sur le quai ce soir-là", points: 10, correct: true },
+            { text: "Il a réussi à subtiliser la décoration dans un bar de l'after avec ses talents d'homme de l'ombre", points: 0, correct: false },
+            { text: "Il l'a racheté à un passant qui souhaitait s'en débarrasser à la décharge communale de Martigny", points: 0, correct: false }
         ]
     },
     {
-        question: "Un rendez-vous prévu à 14h, Brice arrive à :",
+        question: "Lequel de ses attraits physiques a fait craquer Margot ?",
         answers: [
-            { text: "⏰ 13h50 - en avance c'est la vie", points: 15 },
-            { text: "🕐 14h05 - c'est bon je suis à l'heure", points: 50 },
-            { text: "🕑 14h20 - avec une excuse déjà prête", points: 75 },
-            { text: "❓ 14h ? On avait dit 15h non ?", points: 100 }
+            { text: "Les poils du torse", points: 0, correct: false },
+            { text: "Les jambes musclées", points: 0, correct: false },
+            { text: "Sa personnalité", points: 0, correct: false },
+            { text: "Son joli sourire", points: 0, correct: false },
+            { text: "✨ Tous ces attraits !", points: 10, correct: true }
         ]
     },
     {
-        question: "La phrase qui résume le mieux Brice à 30 ans :",
+        question: "Quand Brice fait la cuisine pour Margot, quel est son ingrédient secret ?",
         answers: [
-            { text: "\"Il est temps de devenir adulte et responsable\"", points: 10 },
-            { text: "\"30 ans c'est le nouveau 20 ans\"", points: 40 },
-            { text: "\"L'âge n'est qu'un nombre, la maturité est optionnelle\"", points: 75 },
-            { text: "\"Attends, j'ai vraiment 30 ans ?!\"", points: 100 }
+            { text: "Amour", points: 0, correct: false },
+            { text: "Fromage fondu", points: 0, correct: false },
+            { text: "Café instantané", points: 0, correct: false },
+            { text: "Piment fort", points: 0, correct: false },
+            { text: "🍳 Tous (ça dépend du plat et du jour)", points: 10, correct: true }
+        ]
+    },
+    {
+        question: "Combien d'essais a-t-il fallu à Brice pour réussir à terminer le Grand Raid ?",
+        answers: [
+            { text: "1 essai", points: 0, correct: false },
+            { text: "2 essais", points: 0, correct: false },
+            { text: "3 essais - la persévérance paie !", points: 10, correct: true },
+            { text: "4 essais", points: 0, correct: false }
+        ]
+    },
+    {
+        question: "Quel sport Brice déteste au plus haut point ?",
+        answers: [
+            { text: "Le ski de fond", points: 10, correct: true },
+            { text: "La moto", points: 0, correct: false },
+            { text: "L'équitation", points: 0, correct: false },
+            { text: "Le snowboard", points: 0, correct: false }
+        ]
+    },
+    {
+        question: "Quel projet Brice garde-t-il secrètement ?",
+        answers: [
+            { text: "La traversée du pôle Nord en traîneau", points: 0, correct: false },
+            { text: "La traversée du détroit de Gibraltar en barque", points: 0, correct: false },
+            { text: "Rejoindre la Slovaquie à Nice en parapente", points: 0, correct: false },
+            { text: "Faire la plus grande distance de ski de fond jamais réalisée en 1 mois", points: 10, correct: true }
         ]
     }
 ];
 
 // Messages de chargement humoristiques
 const loadingMessages = [
-    "🔬 Analyse ADN comportemental en cours...",
-    "📊 Consultation des archives secrètes...",
+    "🔬 Vérification des réponses dans la base de données Brice...",
+    "📊 Consultation des archives de la Gouille...",
     "🧮 Calibration du Brice-O-Meter™...",
-    "🔍 Vérification des données biographiques...",
-    "⚡ Traitement par intelligence artificielle...",
-    "🎯 Calcul du coefficient de maturité...",
-    "🌟 Évaluation du niveau d'adulting...",
-    "🔮 Prédiction de l'avenir basée sur les réponses...",
-    "📡 Transmission des résultats au QG...",
-    "🎲 Application d'algorithmes secrets..."
+    "🔍 Analyse des exploits de Brice...",
+    "⚡ Comptage des bonnes réponses...",
+    "🎯 Calcul du score d'expertise Brice...",
+    "🌟 Évaluation de vos connaissances...",
+    "🔮 Comparaison avec les autres participants...",
+    "📡 Transmission des résultats au jury...",
+    "🏔️ Vérification auprès de Margot..."
 ];
 
 // ===== VARIABLES GLOBALES =====
 let currentQuestionIndex = 0;
 let totalScore = 0;
+let correctAnswers = 0;
 let answers = [];
 
 // ===== ÉLÉMENTS DOM =====
@@ -747,6 +800,7 @@ function startQuiz() {
     // Réinitialiser
     currentQuestionIndex = 0;
     totalScore = 0;
+    correctAnswers = 0;
     answers = [];
     
     // Transition vers le quiz
@@ -771,6 +825,15 @@ function showQuestion() {
     // Vider et créer les boutons de réponse
     answersContainer.innerHTML = '';
     
+    // Ajouter l'image si elle existe
+    if (question.image) {
+        const img = document.createElement('img');
+        img.src = question.image;
+        img.className = 'question-image';
+        img.alt = 'Image de la question';
+        answersContainer.appendChild(img);
+    }
+    
     question.answers.forEach((answer, index) => {
         const button = document.createElement('button');
         button.className = 'answer-btn';
@@ -793,6 +856,7 @@ function showQuestion() {
 
 function selectAnswer(answerIndex, points) {
     const answerButtons = document.querySelectorAll('.answer-btn');
+    const selectedAnswer = quizData[currentQuestionIndex].answers[answerIndex];
     
     // Animation de sélection
     answerButtons[answerIndex].classList.add('selected');
@@ -806,9 +870,14 @@ function selectAnswer(answerIndex, points) {
     
     // Enregistrer la réponse
     totalScore += points;
+    if (selectedAnswer.correct) {
+        correctAnswers++;
+    }
+    
     answers.push({
         question: currentQuestionIndex,
-        points: points
+        points: points,
+        correct: selectedAnswer.correct
     });
     
     // Délai avant de passer à la suite
@@ -861,12 +930,12 @@ function showFinalLoading() {
 }
 
 function showResults() {
-    // Calculer le score sur 100
-    const maxPossibleScore = quizData.length * 100;
-    const finalScore = Math.round((totalScore / maxPossibleScore) * 100);
+    // Le score final est le nombre de bonnes réponses
+    const finalScore = correctAnswers;
+    const totalQuestions = quizData.length;
     
     // Déterminer le verdict
-    let verdict = getVerdict(finalScore);
+    let verdict = getVerdict(finalScore, totalQuestions);
     
     // Afficher les résultats avec animation
     resultScreen.classList.add('active');
@@ -882,9 +951,9 @@ function showResults() {
     createConfetti();
     
     // Easter egg : message console
-    console.log(`🎂 Score secret de Brice : ${finalScore}/100`);
-    console.log(`🎉 Niveau de maturité : ${verdict.title}`);
-    console.log(`🔥 Fun fact : ${finalScore < 50 ? "Brice est officiellement un grand enfant !" : "Brice fait semblant d'être adulte !"}`);
+    console.log(`🎂 Score de ${finalScore}/${totalQuestions}`);
+    console.log(`🎉 Niveau d'expertise : ${verdict.title}`);
+    console.log(`🔥 ${verdict.consoleMessage}`);
 }
 
 function animateScore(targetScore) {
@@ -900,26 +969,38 @@ function animateScore(targetScore) {
     }, 30);
 }
 
-function getVerdict(score) {
-    if (score >= 80) {
+function getVerdict(score, total) {
+    const percentage = (score / total) * 100;
+    
+    if (score === total) {
         return {
-            title: "🎮 Éternel Peter Pan",
-            text: "Brice a atteint 30 ans, mais son âge mental reste bloqué quelque part entre 12 et 15 ans. La bonne nouvelle ? Il sait vraiment profiter de la vie ! La mauvaise ? N'attendez pas qu'il range sa chambre de sitôt. Diagnostic officiel : maturité en option, fun en série illimitée !"
+            title: "🏆 Expert Brice Certifié !",
+            text: `Score parfait : ${score}/${total} ! Tu connais Brice mieux que lui-même ! Tu as probablement participé à ses aventures (ou tu es Margot qui a triché 😉). Mention spéciale pour avoir retenu l'histoire de la piqûre d'insecte à la Gouille !`,
+            consoleMessage: "Champion absolu ! Connaissance encyclopédique de Brice !"
         };
-    } else if (score >= 60) {
+    } else if (percentage >= 80) {
         return {
-            title: "🎭 Adulte à Temps Partiel",
-            text: "Félicitations ! Brice a développé la capacité rare de jongler entre responsabilités d'adulte et plaisirs d'adolescent. Il paie ses factures... parfois. Il fait le ménage... quand il y a du monde. Un équilibre parfait entre maturité et jeunesse éternelle !"
+            title: "🎖️ Proche du Cercle Intérieur",
+            text: `Excellent score : ${score}/${total} ! Tu fais clairement partie des proches de Brice. Tu connais ses exploits sportifs, ses lubies et même ses petites manies. Continue comme ça, tu es sur la bonne voie pour devenir son biographe officiel !`,
+            consoleMessage: "Très forte connaissance de Brice - proche confirmé !"
         };
-    } else if (score >= 40) {
+    } else if (percentage >= 60) {
         return {
-            title: "📊 Adulte en Formation",
-            text: "Brice commence à comprendre ce que signifie \"être adulte\", même s'il préférerait clairement éviter le sujet. Il a un planning (qu'il ne suit jamais), un budget (approximatif), et des objectifs (théoriques). En route vers la maturité... à son rythme !"
+            title: "🥉 Ami de Brice Confirmé",
+            text: `Bon score : ${score}/${total}. Tu connais bien Brice et ses aventures principales. Quelques détails t'ont échappé, mais tu sais l'essentiel : son amour pour Mammut, sa relation avec Margot, et son projet fou de ski de fond !`,
+            consoleMessage: "Bonne connaissance générale de Brice"
+        };
+    } else if (percentage >= 40) {
+        return {
+            title: "🤔 Connaissance Moyenne",
+            text: `Score correct : ${score}/${total}. Tu as quelques notions sur Brice et ses passions, mais il reste encore beaucoup à découvrir ! Conseil : demande-lui de te raconter ses aventures autour d'un café (ou d'un fromage fondu) !`,
+            consoleMessage: "Connaissance superficielle - à approfondir !"
         };
     } else {
         return {
-            title: "👔 Sage Responsable Surprenant",
-            text: "Attention, alerte générale ! Brice a atteint un niveau de maturité inattendu. Il planifie, organise, et pourrait même avoir lu un livre de développement personnel. Êtes-vous sûr d'avoir répondu honnêtement ? Parce que ce niveau de sagesse à 30 ans est statistiquement rare !"
+            title: "👋 Nouvellement Arrivé",
+            text: `Score : ${score}/${total}. On dirait que tu viens de rencontrer Brice ! Pas de panique, c'est l'occasion parfaite pour mieux le connaître. Commence par lui demander son projet 30 x 3000, il sera ravi d'en parler pendant des heures !`,
+            consoleMessage: "Débutant dans l'univers Brice - bienvenue !"
         };
     }
 }
@@ -957,6 +1038,7 @@ function restartQuiz() {
     setTimeout(() => {
         currentQuestionIndex = 0;
         totalScore = 0;
+        correctAnswers = 0;
         answers = [];
         welcomeScreen.classList.add('active');
     }, 300);

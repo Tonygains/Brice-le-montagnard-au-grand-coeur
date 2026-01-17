@@ -4,7 +4,550 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brice-O-Meter 3000 | Évaluation Scientifique des 30 Ans</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+/* ===== VARIABLES ET RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #ec4899;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --bg-gradient-start: #1e1b4b;
+    --bg-gradient-end: #312e81;
+    --text-light: #f3f4f6;
+    --text-dark: #1f2937;
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-dark);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ===== ANIMATION DE FOND ===== */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e1b4b, #312e81, #6366f1);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ===== ÉCRANS ===== */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== CARTE PRINCIPALE ===== */
+.card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ===== ÉCRAN D'ACCUEIL ===== */
+.welcome-card {
+    text-align: center;
+}
+
+.title-main {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.warning-box {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-left: 4px solid var(--warning-color);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.warning-box p {
+    line-height: 1.6;
+    color: #92400e;
+}
+
+.disclaimer {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* ===== BOUTONS ===== */
+.btn {
+    padding: 16px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.5);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* ===== BARRE DE PROGRESSION ===== */
+.progress-container {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.progress-text {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ===== QUIZ ===== */
+.quiz-card {
+    animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.question-text {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+.answers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.answer-btn {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.1rem;
+    text-align: left;
+    background: white;
+    border: 3px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.answer-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.answer-btn:hover {
+    border-color: var(--primary-color);
+    transform: translateX(10px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.answer-btn:hover::before {
+    left: 100%;
+}
+
+/* Animation au clic */
+.answer-btn.selected {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.answer-btn.dimmed {
+    opacity: 0.3;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+/* ===== ÉCRAN DE CHARGEMENT ===== */
+.loading-card {
+    text-align: center;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid rgba(99, 102, 241, 0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 30px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    animation: textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.loading-bar {
+    width: 100%;
+    max-width: 400px;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 10px;
+    animation: loadingProgress 1.5s ease-in-out;
+}
+
+@keyframes loadingProgress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* ===== ÉCRAN DE RÉSULTAT ===== */
+.result-card {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.result-title {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+    animation: bounceIn 0.8s ease;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.score-display {
+    margin: 30px 0;
+}
+
+.score-circle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+    animation: scoreReveal 1s ease;
+}
+
+@keyframes scoreReveal {
+    0% {
+        transform: rotate(0deg) scale(0);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.score-value {
+    font-size: 4rem;
+    font-weight: bold;
+    color: white;
+}
+
+.score-label {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.verdict-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin: 20px 0;
+}
+
+.verdict-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.birthday-message {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    padding: 30px;
+    border-radius: 16px;
+    margin: 30px 0;
+    border-left: 5px solid var(--warning-color);
+}
+
+.birthday-message h3 {
+    color: #92400e;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.birthday-message p {
+    color: #92400e;
+    line-height: 1.6;
+}
+
+/* ===== CONFETTIS ===== */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .card {
+        padding: 25px;
+        border-radius: 16px;
+    }
+
+    .title-main {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .question-text {
+        font-size: 1.2rem;
+    }
+
+    .answer-btn {
+        padding: 16px;
+        font-size: 1rem;
+    }
+
+    .answer-btn:hover {
+        transform: translateX(5px);
+    }
+
+    .score-circle {
+        width: 150px;
+        height: 150px;
+    }
+
+    .score-value {
+        font-size: 3rem;
+    }
+
+    .result-title {
+        font-size: 1.5rem;
+    }
+
+    .verdict-title {
+        font-size: 1.4rem;
+    }
+
+    .verdict-text {
+        font-size: 1rem;
+    }
+
+    .btn {
+        padding: 14px 30px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .screen {
+        padding: 15px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .title-main {
+        font-size: 1.5rem;
+    }
+
+    .warning-box {
+        padding: 15px;
+    }
+}
+    </style>
 </head>
 <body>
     <div class="background-animation"></div>
@@ -73,6 +616,423 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+// ===== DONNÉES DU QUIZ =====
+const quizData = [
+    {
+        question: "Un dimanche matin typique pour Brice, c'est plutôt :",
+        answers: [
+            { text: "🏃‍♂️ Jogging à 7h suivi d'un smoothie aux graines de chia", points: 10 },
+            { text: "☕ Se réveiller à midi avec les cheveux en bataille", points: 40 },
+            { text: "🎮 Déjà 3h de gaming en pyjama", points: 70 },
+            { text: "🛏️ Attendre que quelqu'un apporte le petit-déj au lit", points: 100 }
+        ]
+    },
+    {
+        question: "Face à un meuble IKEA à monter, Brice :",
+        answers: [
+            { text: "📋 Lit la notice étape par étape comme un adulte responsable", points: 5 },
+            { text: "🔨 Commence direct, la notice c'est pour les faibles", points: 60 },
+            { text: "📱 Appelle quelqu'un \"qui s'y connaît mieux\"", points: 85 },
+            { text: "🚚 Paie quelqu'un pour le faire à sa place", points: 95 }
+        ]
+    },
+    {
+        question: "Quand Brice reçoit un message vocal de 5 minutes :",
+        answers: [
+            { text: "🎧 L'écoute attentivement et répond point par point", points: 15 },
+            { text: "⏩ Accélère à x2 et capte l'essentiel", points: 45 },
+            { text: "👀 Regarde juste la durée et répond \"ok 👍\"", points: 75 },
+            { text: "❌ Le laisse en \"non lu\" indéfiniment", points: 90 }
+        ]
+    },
+    {
+        question: "Pour ses 30 ans, le cadeau idéal pour Brice serait :",
+        answers: [
+            { text: "📚 Un livre de développement personnel", points: 20 },
+            { text: "🎮 La dernière console ou gadget tech", points: 55 },
+            { text: "🍕 Un abonnement illimité pizza", points: 80 },
+            { text: "🛌 Une journée complète sans responsabilités", points: 100 }
+        ]
+    },
+    {
+        question: "La définition de \"faire le ménage\" selon Brice :",
+        answers: [
+            { text: "🧹 Aspirer, laver, ranger, désinfecter - le grand jeu", points: 10 },
+            { text: "📦 Ranger ce qui traîne dans des tiroirs", points: 50 },
+            { text: "👀 Pousser tout sous le lit avant que quelqu'un arrive", points: 80 },
+            { text: "🚪 Fermer la porte de la pièce en désordre", points: 100 }
+        ]
+    },
+    {
+        question: "Gérer son budget mensuel pour Brice, c'est :",
+        answers: [
+            { text: "💼 Excel avec catégories et prévisions sur 6 mois", points: 5 },
+            { text: "📱 Une app qui fait des graphiques sympas", points: 35 },
+            { text: "🏧 Vérifier le solde au distributeur de temps en temps", points: 70 },
+            { text: "🤷 \"Y'a encore de l'argent dans le compte ? Cool.\"", points: 95 }
+        ]
+    },
+    {
+        question: "Un rendez-vous prévu à 14h, Brice arrive à :",
+        answers: [
+            { text: "⏰ 13h50 - en avance c'est la vie", points: 15 },
+            { text: "🕐 14h05 - c'est bon je suis à l'heure", points: 50 },
+            { text: "🕑 14h20 - avec une excuse déjà prête", points: 75 },
+            { text: "❓ 14h ? On avait dit 15h non ?", points: 100 }
+        ]
+    },
+    {
+        question: "La phrase qui résume le mieux Brice à 30 ans :",
+        answers: [
+            { text: "\"Il est temps de devenir adulte et responsable\"", points: 10 },
+            { text: "\"30 ans c'est le nouveau 20 ans\"", points: 40 },
+            { text: "\"L'âge n'est qu'un nombre, la maturité est optionnelle\"", points: 75 },
+            { text: "\"Attends, j'ai vraiment 30 ans ?!\"", points: 100 }
+        ]
+    }
+];
+
+// Messages de chargement humoristiques
+const loadingMessages = [
+    "🔬 Analyse ADN comportemental en cours...",
+    "📊 Consultation des archives secrètes...",
+    "🧮 Calibration du Brice-O-Meter™...",
+    "🔍 Vérification des données biographiques...",
+    "⚡ Traitement par intelligence artificielle...",
+    "🎯 Calcul du coefficient de maturité...",
+    "🌟 Évaluation du niveau d'adulting...",
+    "🔮 Prédiction de l'avenir basée sur les réponses...",
+    "📡 Transmission des résultats au QG...",
+    "🎲 Application d'algorithmes secrets..."
+];
+
+// ===== VARIABLES GLOBALES =====
+let currentQuestionIndex = 0;
+let totalScore = 0;
+let answers = [];
+
+// ===== ÉLÉMENTS DOM =====
+const welcomeScreen = document.getElementById('welcome-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const loadingScreen = document.getElementById('loading-screen');
+const resultScreen = document.getElementById('result-screen');
+
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
+
+const progressFill = document.getElementById('progress-fill');
+const currentQuestionSpan = document.getElementById('current-question');
+const totalQuestionsSpan = document.getElementById('total-questions');
+
+const questionText = document.getElementById('question-text');
+const answersContainer = document.getElementById('answers-container');
+
+const loadingText = document.getElementById('loading-text');
+
+const scoreValue = document.getElementById('score-value');
+const verdictTitle = document.getElementById('verdict-title');
+const verdictText = document.getElementById('verdict-text');
+
+// ===== INITIALISATION =====
+totalQuestionsSpan.textContent = quizData.length;
+
+// ===== EVENT LISTENERS =====
+startBtn.addEventListener('click', startQuiz);
+restartBtn.addEventListener('click', restartQuiz);
+
+// ===== FONCTIONS PRINCIPALES =====
+
+function startQuiz() {
+    // Réinitialiser
+    currentQuestionIndex = 0;
+    totalScore = 0;
+    answers = [];
+    
+    // Transition vers le quiz
+    welcomeScreen.classList.remove('active');
+    setTimeout(() => {
+        showQuestion();
+        quizScreen.classList.add('active');
+    }, 300);
+}
+
+function showQuestion() {
+    const question = quizData[currentQuestionIndex];
+    
+    // Mettre à jour la progression
+    const progressPercentage = ((currentQuestionIndex) / quizData.length) * 100;
+    progressFill.style.width = progressPercentage + '%';
+    currentQuestionSpan.textContent = currentQuestionIndex + 1;
+    
+    // Afficher la question
+    questionText.textContent = question.question;
+    
+    // Vider et créer les boutons de réponse
+    answersContainer.innerHTML = '';
+    
+    question.answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.className = 'answer-btn';
+        button.textContent = answer.text;
+        button.addEventListener('click', () => selectAnswer(index, answer.points));
+        answersContainer.appendChild(button);
+        
+        // Animation d'apparition séquentielle
+        setTimeout(() => {
+            button.style.opacity = '0';
+            button.style.transform = 'translateX(-30px)';
+            setTimeout(() => {
+                button.style.transition = 'all 0.4s ease';
+                button.style.opacity = '1';
+                button.style.transform = 'translateX(0)';
+            }, 50);
+        }, index * 100);
+    });
+}
+
+function selectAnswer(answerIndex, points) {
+    const answerButtons = document.querySelectorAll('.answer-btn');
+    
+    // Animation de sélection
+    answerButtons[answerIndex].classList.add('selected');
+    
+    // Atténuer les autres boutons
+    answerButtons.forEach((btn, index) => {
+        if (index !== answerIndex) {
+            btn.classList.add('dimmed');
+        }
+    });
+    
+    // Enregistrer la réponse
+    totalScore += points;
+    answers.push({
+        question: currentQuestionIndex,
+        points: points
+    });
+    
+    // Délai avant de passer à la suite
+    setTimeout(() => {
+        if (currentQuestionIndex < quizData.length - 1) {
+            showLoadingScreen();
+        } else {
+            showFinalLoading();
+        }
+    }, 800);
+}
+
+function showLoadingScreen() {
+    quizScreen.classList.remove('active');
+    
+    setTimeout(() => {
+        // Message de chargement aléatoire
+        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+        loadingText.textContent = randomMessage;
+        
+        loadingScreen.classList.add('active');
+        
+        // Passer à la question suivante après le chargement
+        setTimeout(() => {
+            loadingScreen.classList.remove('active');
+            currentQuestionIndex++;
+            
+            setTimeout(() => {
+                showQuestion();
+                quizScreen.classList.add('active');
+            }, 300);
+        }, 1800);
+    }, 300);
+}
+
+function showFinalLoading() {
+    quizScreen.classList.remove('active');
+    
+    setTimeout(() => {
+        loadingText.textContent = "🎉 Compilation des résultats finaux...";
+        loadingScreen.classList.add('active');
+        
+        setTimeout(() => {
+            loadingScreen.classList.remove('active');
+            setTimeout(() => {
+                showResults();
+            }, 300);
+        }, 2000);
+    }, 300);
+}
+
+function showResults() {
+    // Calculer le score sur 100
+    const maxPossibleScore = quizData.length * 100;
+    const finalScore = Math.round((totalScore / maxPossibleScore) * 100);
+    
+    // Déterminer le verdict
+    let verdict = getVerdict(finalScore);
+    
+    // Afficher les résultats avec animation
+    resultScreen.classList.add('active');
+    
+    // Animation du score
+    animateScore(finalScore);
+    
+    // Afficher le verdict
+    verdictTitle.textContent = verdict.title;
+    verdictText.textContent = verdict.text;
+    
+    // Lancer les confettis
+    createConfetti();
+    
+    // Easter egg : message console
+    console.log(`🎂 Score secret de Brice : ${finalScore}/100`);
+    console.log(`🎉 Niveau de maturité : ${verdict.title}`);
+    console.log(`🔥 Fun fact : ${finalScore < 50 ? "Brice est officiellement un grand enfant !" : "Brice fait semblant d'être adulte !"}`);
+}
+
+function animateScore(targetScore) {
+    let currentScore = 0;
+    const increment = targetScore / 50; // 50 étapes d'animation
+    const interval = setInterval(() => {
+        currentScore += increment;
+        if (currentScore >= targetScore) {
+            currentScore = targetScore;
+            clearInterval(interval);
+        }
+        scoreValue.textContent = Math.round(currentScore);
+    }, 30);
+}
+
+function getVerdict(score) {
+    if (score >= 80) {
+        return {
+            title: "🎮 Éternel Peter Pan",
+            text: "Brice a atteint 30 ans, mais son âge mental reste bloqué quelque part entre 12 et 15 ans. La bonne nouvelle ? Il sait vraiment profiter de la vie ! La mauvaise ? N'attendez pas qu'il range sa chambre de sitôt. Diagnostic officiel : maturité en option, fun en série illimitée !"
+        };
+    } else if (score >= 60) {
+        return {
+            title: "🎭 Adulte à Temps Partiel",
+            text: "Félicitations ! Brice a développé la capacité rare de jongler entre responsabilités d'adulte et plaisirs d'adolescent. Il paie ses factures... parfois. Il fait le ménage... quand il y a du monde. Un équilibre parfait entre maturité et jeunesse éternelle !"
+        };
+    } else if (score >= 40) {
+        return {
+            title: "📊 Adulte en Formation",
+            text: "Brice commence à comprendre ce que signifie \"être adulte\", même s'il préférerait clairement éviter le sujet. Il a un planning (qu'il ne suit jamais), un budget (approximatif), et des objectifs (théoriques). En route vers la maturité... à son rythme !"
+        };
+    } else {
+        return {
+            title: "👔 Sage Responsable Surprenant",
+            text: "Attention, alerte générale ! Brice a atteint un niveau de maturité inattendu. Il planifie, organise, et pourrait même avoir lu un livre de développement personnel. Êtes-vous sûr d'avoir répondu honnêtement ? Parce que ce niveau de sagesse à 30 ans est statistiquement rare !"
+        };
+    }
+}
+
+function createConfetti() {
+    const container = document.getElementById('confetti-container');
+    const colors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6'];
+    
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            container.appendChild(confetti);
+            
+            // Supprimer après l'animation
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }, i * 50);
+    }
+}
+
+function restartQuiz() {
+    // Nettoyer les confettis
+    document.getElementById('confetti-container').innerHTML = '';
+    
+    // Réinitialiser et retourner à l'accueil
+    resultScreen.classList.remove('active');
+    
+    setTimeout(() => {
+        currentQuestionIndex = 0;
+        totalScore = 0;
+        answers = [];
+        welcomeScreen.classList.add('active');
+    }, 300);
+}
+
+// ===== EASTER EGG : KONAMI CODE =====
+let konamiCode = [];
+const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+document.addEventListener('keydown', (e) => {
+    konamiCode.push(e.key);
+    konamiCode = konamiCode.slice(-10);
+    
+    if (konamiCode.join(',') === konamiSequence.join(',')) {
+        activateEasterEgg();
+        konamiCode = [];
+    }
+});
+
+function activateEasterEgg() {
+    // Message secret dans la console
+    console.log('%c🎉 KONAMI CODE ACTIVÉ ! 🎉', 'font-size: 20px; color: #6366f1; font-weight: bold;');
+    console.log('%cBrice a débloqué le niveau secret : "Maître du Brice-O-Meter" !', 'font-size: 14px; color: #ec4899;');
+    
+    // Animation spéciale
+    document.body.style.animation = 'none';
+    setTimeout(() => {
+        document.body.style.animation = 'rainbow 2s linear infinite';
+    }, 10);
+    
+    // Ajouter l'animation rainbow
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Retirer après 4 secondes
+    setTimeout(() => {
+        document.body.style.animation = 'none';
+    }, 4000);
+}
+
+// ===== SON OPTIONNEL (commenté par défaut) =====
+// Décommenter pour ajouter des effets sonores
+
+/*
+function playSound(type) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    if (type === 'click') {
+        oscillator.frequency.value = 800;
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    } else if (type === 'success') {
+        oscillator.frequency.value = 1000;
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    }
+}
+
+// Ajouter dans selectAnswer() : playSound('click');
+// Ajouter dans showResults() : playSound('success');
+*/
+    </script>
 </body>
 </html>

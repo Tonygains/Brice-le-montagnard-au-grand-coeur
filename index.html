@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brice-O-Meter 3000 | Évaluation Scientifique des 30 Ans</title>
+    <title>Brice et Margot 3000 | Évaluation Scientifique des 30 Ans</title>
     <style>
 /* ===== VARIABLES ET RESET ===== */
 * {
@@ -189,6 +189,23 @@ body {
     transform: translateY(-3px);
 }
 
+.music-toggle {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    padding: 12px 30px;
+}
+
+.music-toggle.active {
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.music-toggle.active:hover {
+    background: #059669;
+    border-color: #059669;
+}
+
 /* ===== BARRE DE PROGRESSION ===== */
 .progress-container {
     margin-bottom: 30px;
@@ -313,6 +330,38 @@ body {
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
 }
 
+/* Réponse correcte (verte) */
+.answer-btn.correct {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-color: #10b981;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+    animation: correctPulse 0.5s ease;
+}
+
+@keyframes correctPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1.05); }
+}
+
+/* Réponse incorrecte (rouge) */
+.answer-btn.incorrect {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border-color: #ef4444;
+    transform: scale(0.95);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    animation: incorrectShake 0.5s ease;
+}
+
+@keyframes incorrectShake {
+    0%, 100% { transform: translateX(0) scale(0.95); }
+    25% { transform: translateX(-10px) scale(0.95); }
+    75% { transform: translateX(10px) scale(0.95); }
+}
+
 .answer-btn.dimmed {
     opacity: 0.3;
     transform: scale(0.95);
@@ -327,6 +376,78 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: visible;
+}
+
+/* Stickers tournants */
+.spinning-stickers {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.sticker {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 4px solid white;
+}
+
+.sticker-1 {
+    top: 0;
+    left: 0;
+    animation: spinSticker1 2s ease-in-out infinite;
+}
+
+.sticker-2 {
+    bottom: 0;
+    right: 0;
+    animation: spinSticker2 2s ease-in-out infinite;
+}
+
+@keyframes spinSticker1 {
+    0% {
+        transform: rotate(0deg) translateX(0) scale(1);
+    }
+    25% {
+        transform: rotate(90deg) translateX(50px) scale(1.2);
+    }
+    50% {
+        transform: rotate(180deg) translateX(0) scale(1);
+    }
+    75% {
+        transform: rotate(270deg) translateX(-50px) scale(0.8);
+    }
+    100% {
+        transform: rotate(360deg) translateX(0) scale(1);
+    }
+}
+
+@keyframes spinSticker2 {
+    0% {
+        transform: rotate(0deg) translateY(0) scale(1);
+    }
+    25% {
+        transform: rotate(-90deg) translateY(-50px) scale(0.8);
+    }
+    50% {
+        transform: rotate(-180deg) translateY(0) scale(1);
+    }
+    75% {
+        transform: rotate(-270deg) translateY(50px) scale(1.2);
+    }
+    100% {
+        transform: rotate(-360deg) translateY(0) scale(1);
+    }
 }
 
 .spinner {
@@ -585,6 +706,9 @@ body {
             <button id="start-btn" class="btn btn-primary">
                 Commencer l'Analyse
             </button>
+            <button id="music-toggle" class="btn btn-secondary music-toggle">
+                🔊 Activer la Musique
+            </button>
             <p class="disclaimer">Certifié conforme par Margot, Claudia et tous les amis de Brice</p>
         </div>
     </div>
@@ -595,7 +719,7 @@ body {
             <div class="progress-bar">
                 <div id="progress-fill" class="progress-fill"></div>
             </div>
-            <p class="progress-text"><span id="current-question">1</span> / <span id="total-questions">11</span></p>
+            <p class="progress-text"><span id="current-question">1</span> / <span id="total-questions">12</span></p>
         </div>
         
         <div class="card quiz-card">
@@ -607,6 +731,10 @@ body {
     <!-- Écran intermédiaire (calcul) -->
     <div id="loading-screen" class="screen">
         <div class="card loading-card">
+            <div class="spinning-stickers">
+                <img src="https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/ggg.jpg?raw=true" class="sticker sticker-1" alt="Brice et Margot">
+                <img src="https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/deux.jpg?raw=true" class="sticker sticker-2" alt="Brice et Margot">
+            </div>
             <div class="spinner"></div>
             <h2 id="loading-text" class="loading-text">Analyse en cours...</h2>
             <div class="loading-bar">
@@ -623,7 +751,7 @@ body {
             <div class="score-display">
                 <div class="score-circle">
                     <span id="score-value" class="score-value">0</span>
-                    <span class="score-label">/ 11</span>
+                    <span class="score-label">/ 12</span>
                 </div>
             </div>
             <h2 id="verdict-title" class="verdict-title"></h2>
@@ -643,6 +771,7 @@ body {
 const quizData = [
     {
         question: "Combien de sommets Brice a-t-il réussi à faire dans son projet 30 x 3000 ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/WhatsApp%20Image%202026-01-17%20at%2010.36.52.jpeg?raw=true",
         answers: [
             { text: "8 sommets", points: 0, correct: false },
             { text: "9 sommets", points: 10, correct: true },
@@ -661,6 +790,7 @@ const quizData = [
     },
     {
         question: "Dans laquelle de ses lubies Brice n'a-t-il toujours pas réussi à convertir Margot ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/Margot.jpeg?raw=true",
         answers: [
             { text: "VTT", points: 10, correct: true },
             { text: "Vélo", points: 0, correct: false },
@@ -679,6 +809,7 @@ const quizData = [
     },
     {
         question: "Qui Brice a-t-il réussi à ragoter dans un projet bancal de VTT à Tenerife sous la pluie ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/Inconnu.jpg?raw=true",
         answers: [
             { text: "Le voisin de l'avion", points: 10, correct: true },
             { text: "Un ami surfeur au camp", points: 0, correct: false },
@@ -698,6 +829,7 @@ const quizData = [
     },
     {
         question: "Lequel de ses attraits physiques a fait craquer Margot ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/surf.jpg?raw=true",
         answers: [
             { text: "Les poils du torse", points: 0, correct: false },
             { text: "Les jambes musclées", points: 0, correct: false },
@@ -718,6 +850,7 @@ const quizData = [
     },
     {
         question: "Combien d'essais a-t-il fallu à Brice pour réussir à terminer le Grand Raid ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/WhatsApp%20Image%202026-01-17%20at%2010.35.30.jpeg?raw=true",
         answers: [
             { text: "1 essai", points: 0, correct: false },
             { text: "2 essais", points: 0, correct: false },
@@ -736,27 +869,39 @@ const quizData = [
     },
     {
         question: "Quel projet Brice garde-t-il secrètement ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/WhatsApp%20Image%202026-01-17%20at%2010.35.07%20(1).jpeg?raw=true",
         answers: [
             { text: "La traversée du pôle Nord en traîneau", points: 0, correct: false },
             { text: "La traversée du détroit de Gibraltar en barque", points: 0, correct: false },
             { text: "Rejoindre la Slovaquie à Nice en parapente", points: 0, correct: false },
             { text: "Faire la plus grande distance de ski de fond jamais réalisée en 1 mois", points: 10, correct: true }
         ]
+    },
+    {
+        question: "🏆 Question Bonus : Brice a-t-il gagné un titre au foot ?",
+        image: "https://github.com/Tonygains/Brice-le-montagnard-au-grand-coeur/blob/main/images/foot.jpg?raw=true",
+        answers: [
+            { text: "⚽ Oui, champion !", points: 10, correct: true },
+            { text: "❌ Non", points: 0, correct: false }
+        ]
     }
 ];
 
 // Messages de chargement humoristiques
 const loadingMessages = [
-    "🔬 Vérification des réponses dans la base de données Brice...",
+    "🔬 Vérification auprès de Margot...",
     "📊 Consultation des archives de la Gouille...",
     "🧮 Calibration du Brice-O-Meter™...",
-    "🔍 Analyse des exploits de Brice...",
-    "⚡ Comptage des bonnes réponses...",
-    "🎯 Calcul du score d'expertise Brice...",
-    "🌟 Évaluation de vos connaissances...",
-    "🔮 Comparaison avec les autres participants...",
-    "📡 Transmission des résultats au jury...",
-    "🏔️ Vérification auprès de Margot..."
+    "🔍 Analyse des exploits montagnards...",
+    "⚡ Comptage des sommets grimpés...",
+    "🎯 Calcul du coefficient Mammut...",
+    "🌟 Évaluation du niveau VTT...",
+    "🔮 Vérification du stock de fromage fondu...",
+    "📡 Interrogation de l'oracle du Grand Raid...",
+    "🏔️ Consultation du guide des 30x3000...",
+    "⚽ Vérification des titres sportifs...",
+    "🎿 Calcul de l'allergie au ski de fond...",
+    "💪 Analyse de la persévérance (3 essais minimum)..."
 ];
 
 // ===== VARIABLES GLOBALES =====
@@ -764,6 +909,8 @@ let currentQuestionIndex = 0;
 let totalScore = 0;
 let correctAnswers = 0;
 let answers = [];
+let musicEnabled = false;
+let audioContext = null;
 
 // ===== ÉLÉMENTS DOM =====
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -773,6 +920,7 @@ const resultScreen = document.getElementById('result-screen');
 
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const musicToggle = document.getElementById('music-toggle');
 
 const progressFill = document.getElementById('progress-fill');
 const currentQuestionSpan = document.getElementById('current-question');
@@ -793,8 +941,95 @@ totalQuestionsSpan.textContent = quizData.length;
 // ===== EVENT LISTENERS =====
 startBtn.addEventListener('click', startQuiz);
 restartBtn.addEventListener('click', restartQuiz);
+musicToggle.addEventListener('click', toggleMusic);
 
 // ===== FONCTIONS PRINCIPALES =====
+
+function toggleMusic() {
+    musicEnabled = !musicEnabled;
+    
+    if (musicEnabled) {
+        musicToggle.textContent = '🔊 Musique Activée';
+        musicToggle.classList.add('active');
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        playHappySound();
+    } else {
+        musicToggle.textContent = '🔇 Activer la Musique';
+        musicToggle.classList.remove('active');
+    }
+}
+
+function playSound(type) {
+    if (!musicEnabled || !audioContext) return;
+    
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    if (type === 'correct') {
+        // Son joyeux pour bonne réponse
+        oscillator.frequency.value = 523.25; // Do
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        oscillator.start(audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // Mi
+        oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // Sol
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        oscillator.stop(audioContext.currentTime + 0.4);
+    } else if (type === 'incorrect') {
+        // Son descendant pour mauvaise réponse
+        oscillator.frequency.value = 400;
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } else if (type === 'transition') {
+        // Son fun pour les transitions
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 800;
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.2);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } else if (type === 'victory') {
+        // Mélodie de victoire
+        const notes = [523.25, 587.33, 659.25, 783.99];
+        notes.forEach((freq, i) => {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.15 + 0.3);
+            osc.start(audioContext.currentTime + i * 0.15);
+            osc.stop(audioContext.currentTime + i * 0.15 + 0.3);
+        });
+    }
+}
+
+function playHappySound() {
+    if (!musicEnabled || !audioContext) return;
+    
+    const notes = [523.25, 659.25, 783.99];
+    notes.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, audioContext.currentTime + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.2);
+        osc.start(audioContext.currentTime + i * 0.1);
+        osc.stop(audioContext.currentTime + i * 0.1 + 0.2);
+    });
+}
 
 function startQuiz() {
     // Réinitialiser
@@ -858,12 +1093,31 @@ function selectAnswer(answerIndex, points) {
     const answerButtons = document.querySelectorAll('.answer-btn');
     const selectedAnswer = quizData[currentQuestionIndex].answers[answerIndex];
     
-    // Animation de sélection
-    answerButtons[answerIndex].classList.add('selected');
+    // Jouer le son approprié
+    if (selectedAnswer.correct) {
+        playSound('correct');
+    } else {
+        playSound('incorrect');
+    }
     
-    // Atténuer les autres boutons
+    // Marquer la réponse sélectionnée comme correcte ou incorrecte
+    if (selectedAnswer.correct) {
+        answerButtons[answerIndex].classList.add('correct');
+    } else {
+        answerButtons[answerIndex].classList.add('incorrect');
+        
+        // Montrer aussi la bonne réponse en vert
+        quizData[currentQuestionIndex].answers.forEach((answer, index) => {
+            if (answer.correct) {
+                answerButtons[index].classList.add('correct');
+            }
+        });
+    }
+    
+    // Atténuer les autres boutons (sauf les bonnes réponses)
     answerButtons.forEach((btn, index) => {
-        if (index !== answerIndex) {
+        const answer = quizData[currentQuestionIndex].answers[index];
+        if (!answer.correct && index !== answerIndex) {
             btn.classList.add('dimmed');
         }
     });
@@ -887,7 +1141,7 @@ function selectAnswer(answerIndex, points) {
         } else {
             showFinalLoading();
         }
-    }, 800);
+    }, 1500); // Augmenté à 1.5 sec pour voir les couleurs
 }
 
 function showLoadingScreen() {
@@ -899,6 +1153,9 @@ function showLoadingScreen() {
         loadingText.textContent = randomMessage;
         
         loadingScreen.classList.add('active');
+        
+        // Jouer le son de transition
+        playSound('transition');
         
         // Passer à la question suivante après le chargement
         setTimeout(() => {
@@ -939,6 +1196,9 @@ function showResults() {
     
     // Afficher les résultats avec animation
     resultScreen.classList.add('active');
+    
+    // Jouer le son de victoire
+    playSound('victory');
     
     // Animation du score
     animateScore(finalScore);
